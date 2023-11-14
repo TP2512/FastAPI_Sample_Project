@@ -4,10 +4,16 @@ from typing import Optional
 from pydantic import BaseModel, EmailStr
 
 
+class UserLogin(BaseModel):
+    email: EmailStr
+    # password: str
+
+
 class Post(BaseModel):
     name: str
     surname: str
     rating: Optional[int] = None
+
 
 
 class CreatePost(Post):
@@ -19,6 +25,7 @@ class GetRes(BaseModel):
     name: str
     surname: str
     owner_id: int
+    owner: UserLogin
 
     class Config:
         orm_mode = True
@@ -41,11 +48,6 @@ class PostedUser(BaseModel):
     email: EmailStr
     id: int
     created_at: datetime
-
-
-class UserLogin(BaseModel):
-    email: EmailStr
-    password: str
 
 
 class Token(BaseModel):
