@@ -1,15 +1,16 @@
 from fastapi import status, HTTPException, Depends, APIRouter
 from sqlalchemy.orm import Session
+from database import get_db
+import models, Schemas, utils
 
-from .. import database as dtb
-from .. import models, Schemas
-from .. import utils
+router = APIRouter(
+    prefix="/users",
+    tags=["Users"]
+)
 
-router = APIRouter()
 
-
-@router.post("/users", status_code=status.HTTP_201_CREATED, response_model=Schemas.PostedUser)
-def create_posts(user: Schemas.UserCreate, db: Session = Depends(dtb.get_db)):
+@router.post("/", status_code=status.HTTP_201_CREATED, response_model=Schemas.PostedUser)
+def create_posts(user: Schemas.UserCreate, db: Session = Depends(get_db)):
     existing_user = db.query(models.User).filter(models.User.email == user.email).first()
     if existing_user:
         raise HTTPException(status_code=400, detail="User already exists")
